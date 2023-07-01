@@ -20,6 +20,11 @@ def create_bot(model_type):
         # ChatGPT API (gpt-3.5-turbo)
         from model.openai.chatgpt_model import ChatGPTModel
         return ChatGPTModel()
+    
+    elif model_type == const.CHATGPTDOC:
+        # ChatGPT doc
+        from model.openai.chatgpt_doc_model import ChatGPTDocModel
+        return ChatGPTDocModel()
 
     elif model_type == const.BAIDU:
         from model.baidu.yiyan_model import YiyanModel
