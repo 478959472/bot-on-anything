@@ -14,7 +14,9 @@ class ChatGPTDocModel(Model):
     def __init__(self):
         self.acs_token = model_conf(const.BAIDU).get('acs_token')
         self.cookie = model_conf(const.BAIDU).get('cookie')
-        self.base_url = 'http://10.10.217.176:9776/api/questions'
+        # http://10.10.217.176:9776/
+        self.base_url = 'http://127.0.0.1:8100/api/questions'
+        # self.base_url = 'http://10.10.217.176:9776/api/questions'
 
     def reply(self, query, context=None):
         logger.info("[BAIDU] query={}".format(query))
@@ -72,7 +74,7 @@ class ChatGPTDocModel(Model):
             fields={
                 'question': context['query'],
             'model': context['model'],
-            'uuid': '1',
+            'uuid': '8078d199-aac0-452d-8487-698fc10d3c84',
             }
         )
         headers['Content-Type'] = multipart_data.content_type
@@ -82,10 +84,12 @@ class ChatGPTDocModel(Model):
         res = res.json()
         if res['answer'] != '':
             context['reply'] += res['answer']
-            doc_titles='\n相关文档：\n'
+            doc_titles=''
             for item in res['context']:
                 if not item['title'] in doc_titles:
                     doc_titles += item['title'] + "\n"
+            if len(doc_titles) > 0:
+                doc_titles='\n相关文档：\n' + doc_titles
             context['reply'] += doc_titles
             # logger.debug("[BAIDU] query: sent_id={}, reply={}".format(sentence_id, res['data']['text']))
         else:
